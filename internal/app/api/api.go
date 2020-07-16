@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/gorilla/mux"
+	"github.com/iluxaorlov/rest-api/internal/app/store"
 	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
@@ -11,6 +12,7 @@ type Api struct {
 	config *Config
 	logger *logrus.Logger
 	router *mux.Router
+	store  *store.Store
 }
 
 func New(config *Config) *Api {
@@ -18,6 +20,7 @@ func New(config *Config) *Api {
 		config: config,
 		logger: logrus.New(),
 		router: mux.NewRouter(),
+
 	}
 }
 
@@ -27,6 +30,10 @@ func (a *Api) Start() error {
 	}
 
 	a.configRouter()
+
+	if err := a.configStore(); err != nil {
+		return err
+	}
 
 	a.logger.Info("Starting API server")
 
@@ -46,6 +53,18 @@ func (a *Api) configLogger() error {
 
 func (a *Api) configRouter() {
 	a.router.HandleFunc("/hello", a.handleHello())
+}
+
+func (a *Api) configStore() error {
+	s := store.New(a.config.Store)
+
+	if err := s.Open(); err != nil {
+		return err
+	}
+
+	a.store = s
+
+	return nil
 }
 
 func (a *Api) handleHello() http.HandlerFunc {
