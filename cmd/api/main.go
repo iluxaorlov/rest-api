@@ -12,7 +12,7 @@ var (
 )
 
 func init() {
-	flag.StringVar(&configPath, "config-path", "configs/api.toml", "Path to config file")
+	flag.StringVar(&configPath, "config-path", "configs/api.toml", "path to config file")
 }
 
 func main() {
@@ -25,8 +25,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	a := api.New(config)
-	if err := a.Start(); err != nil {
+	if err := api.Start(config); err != nil {
 		log.Fatal(err)
 	}
 }

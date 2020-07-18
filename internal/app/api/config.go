@@ -1,17 +1,14 @@
 package api
 
-import "github.com/iluxaorlov/rest-api/internal/app/store"
-
 type Config struct {
-	Address  string `toml:"address"`
-	LogLevel string `toml:"log-level"`
-	Store    *store.Config
+	Address     string `toml:"address"`
+	LogLevel    string `toml:"log-level"`
+	DatabaseUrl string `toml:"database_url"`
 }
 
 func NewConfig() *Config {
 	return &Config{
-		Address:  ":8080",
-		LogLevel: "debug",
-		Store:    store.NewConfig(),
+		Address:     ":8080",
+		LogLevel:    "debug",
 	}
 }
